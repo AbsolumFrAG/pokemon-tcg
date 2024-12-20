@@ -20,6 +20,14 @@ router.get('/profile', auth, (req, res) => {
     });
 });
 
+router.get('/register', (req, res) => {
+    res.render('auth/register');
+});
+
+router.get('/login', (req, res) => {
+    res.render('auth/login');
+});
+
 // Routes admin
 router.get('/admin', auth, isAdmin, (req, res) => {
     res.json({ 
