@@ -1,0 +1,181 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Créer une nouvelle carte</h1>
+
+    <form
+      action="/cards"
+      method="POST"
+      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+    >
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+          Nom de la carte
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="name"
+          name="name"
+          type="text"
+          required
+          minlength="2"
+          maxlength="30"
+          placeholder="Nom de la carte"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
+          Type
+        </label>
+        <select
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="type"
+          name="type"
+          required
+        >
+          <option value="">Sélectionner un type</option>
+          <option value="Fire">Feu</option>
+          <option value="Water">Eau</option>
+          <option value="Grass">Plante</option>
+          <option value="Electric">Électrique</option>
+          <option value="Psychic">Psy</option>
+          <option value="Fighting">Combat</option>
+          <option value="Normal">Normal</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="rarity">
+          Rareté
+        </label>
+        <select
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="rarity"
+          name="rarity"
+          required
+        >
+          <option value="">Sélectionner une rareté</option>
+          <option value="Common">Commune</option>
+          <option value="Uncommon">Peu commune</option>
+          <option value="Rare">Rare</option>
+          <option value="Ultra Rare">Ultra rare</option>
+          <option value="Secret Rare">Secrète rare</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hp">
+          Points de vie (HP)
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="hp"
+          name="hp"
+          type="number"
+          required
+          min="1"
+          max="300"
+          placeholder="HP"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="imageUrl"
+        >
+          URL de l'image
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="imageUrl"
+          name="imageUrl"
+          type="url"
+          required
+          placeholder="https://exemple.com/image.jpg"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="weakness"
+        >
+          Faiblesse
+        </label>
+        <select
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="weakness"
+          name="weakness"
+        >
+          <option value="">Aucune faiblesse</option>
+          <option value="Fire">Feu</option>
+          <option value="Water">Eau</option>
+          <option value="Grass">Plante</option>
+          <option value="Electric">Électrique</option>
+          <option value="Psychic">Psy</option>
+          <option value="Fighting">Combat</option>
+          <option value="Normal">Normal</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="resistance"
+        >
+          Résistance
+        </label>
+        <select
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="resistance"
+          name="resistance"
+        >
+          <option value="">Aucune résistance</option>
+          <option value="Fire">Feu</option>
+          <option value="Water">Eau</option>
+          <option value="Grass">Plante</option>
+          <option value="Electric">Électrique</option>
+          <option value="Psychic">Psy</option>
+          <option value="Fighting">Combat</option>
+          <option value="Normal">Normal</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="retreatCost"
+        >
+          Coût de retraite
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="retreatCost"
+          name="retreatCost"
+          type="number"
+          required
+          min="0"
+          max="4"
+          value="0"
+        />
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Créer la carte
+        </button>
+        <a href="/cards" class="text-blue-500 hover:text-blue-800">
+          Retour à la liste
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
