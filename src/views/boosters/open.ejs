@@ -1,0 +1,45 @@
+<%- contentFor('head') %>
+<title>Open a Booster Pack</title>
+
+<%- contentFor('body') %>
+<h1 class="text-3xl font-bold mb-4">Open a Booster Pack</h1>
+  <p class="text-lg">Welcome, <%= user.username %>!</p>
+
+  <!-- Display probabilities -->
+  <h2 class="text-2xl font-semibold mt-4">Booster Probabilities</h2>
+  <table class="w-full mt-2">
+    <thead>
+      <tr class="text-left">
+        <th class="px-4 py-2">Rarity</th>
+        <th class="px-4 py-2">Probability</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (probabilities) { %>
+        <% for (let rarity in probabilities) { %>
+          <tr class="border-t">
+            <td class="px-4 py-2"><%= rarity %></td>
+            <td class="px-4 py-2"><%= probabilities[rarity] %></td>
+          </tr>
+        <% } %>
+      <% } else { %>
+        <tr>
+          <td colspan="2" class="px-4 py-2">No probabilities available.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Form to open a booster pack -->
+  <h2 class="text-2xl font-semibold mt-4">Open a Booster Pack</h2>
+  <form action="/boosters/api/open" method="POST" class="mt-2">
+    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Open Booster</button>
+  </form>
+
+  <!-- Navigation links -->
+  <p class="mt-4">
+    <a href="/" class="text-blue-600 hover:underline">Back to Home</a>
+    |
+    <a href="/boosters/results" class="text-blue-600 hover:underline">View Results</a>
+  </p>
+<%- contentFor('scripts') %>

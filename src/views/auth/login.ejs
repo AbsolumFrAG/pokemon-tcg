@@ -1,0 +1,68 @@
+<%- contentFor('head') %>
+<title>Connexion</title>
+
+<%- contentFor('body') %>
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+  <h2 class="text-2xl font-bold mb-6 text-center">Connexion</h2>
+  
+  <form id="loginForm" action="/auth/login" method="POST" class="space-y-4">
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+      <input type="email" id="email" name="email" required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+    </div>
+
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+      <input type="password" id="password" name="password" required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+    </div>
+
+    <div id="errorMessage" class="hidden text-red-600 text-sm"></div>
+
+    <button type="submit" 
+      class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      Se connecter
+    </button>
+  </form>
+
+  <p class="mt-4 text-center text-sm text-gray-600">
+    Pas encore de compte ? 
+    <a href="/auth/register" class="font-medium text-blue-600 hover:text-blue-500">
+      S'inscrire
+    </a>
+  </p>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.classList.add('hidden');
+
+  try {
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Erreur lors de la connexion');
+    }
+
+    window.location.href = '/cards';
+  } catch (error) {
+    errorDiv.textContent = error.message;
+    errorDiv.classList.remove('hidden');
+  }
+});
+</script>

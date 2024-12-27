@@ -1,0 +1,135 @@
+<%- contentFor('head') %>
+<title>Liste des cartes</title>
+
+<%- contentFor('body') %>
+<div class="container mx-auto px-4">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Collection de cartes</h1>
+    <% if (locals.user?.role === 'admin') { %>
+      <a href="/cards/new" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ajouter une carte</a>
+    <% } %>
+  </div>
+
+  <!-- Filtres -->
+  <div class="bg-white p-4 rounded shadow mb-6">
+    <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Type</label>
+        <select name="type" class="mt-1 block w-full rounded-md border-gray-300">
+          <option value="">Tous</option>
+          <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic', 'Colorless'].forEach(type => { %>
+            <option value="<%= type %>" <%= locals.filters?.type === type ? 'selected' : '' %>><%= type %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Rareté</label>
+        <select name="rarity" class="mt-1 block w-full rounded-md border-gray-300">
+          <option value="">Toutes</option>
+          <% ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Secret Rare'].forEach(rarity => { %>
+            <option value="<%= rarity %>" <%= locals.filters?.rarity === rarity ? 'selected' : '' %>><%= rarity %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Recherche</label>
+        <input type="text" name="name" value="<%= locals.filters?.name || '' %>" 
+          placeholder="Nom de la carte" 
+          class="mt-1 block w-full rounded-md border-gray-300">
+      </div>
+      <div class="flex items-end">
+        <button type="submit" 
+          class="w-full bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200">
+          Filtrer
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Grille de cartes -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <% if (locals.cards) { %>
+      <% cards.forEach(card => { %>
+        <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+          <img src="<%= card.imageUrl %>" alt="<%= card.name %>" 
+            class="w-full h-48 object-cover">
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold"><%= card.name %></h3>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <%= card.type %>
+              </span>
+            </div>
+            <div class="text-sm text-gray-600 mb-4">
+              <p>HP: <%= card.hp %></p>
+              <p>Rareté: <%= card.rarity %></p>
+            </div>
+            <div class="flex justify-between items-center">
+              <a href="/cards/<%= card._id %>" 
+                class="text-blue-600 hover:text-blue-800">
+                Voir détails
+              </a>
+              <% if (locals.user?.role === 'admin') { %>
+                <div class="flex space-x-2">
+                  <a href="/cards/<%= card._id %>/edit" 
+                    class="text-gray-600 hover:text-gray-800">
+                    Modifier
+                  </a>
+                  <button onclick="deleteCard('<%= card._id %>')" 
+                    class="text-red-600 hover:text-red-800">
+                    Supprimer
+                  </button>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- Pagination -->
+  <% if (locals.pagination && pagination.pages > 1) { %>
+    <div class="flex justify-center space-x-2 mt-6">
+      <% for(let i = 1; i <= pagination.pages; i++) { %>
+        <a href="?page=<%= i %>" 
+          class="px-3 py-2 rounded <%= pagination.page === i ? 'bg-blue-600 text-white' : 'bg-gray-100' %>">
+          <%= i %>
+        </a>
+      <% } %>
+    </div>
+  <% } %>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+async function deleteCard(id) {
+  if (!confirm('Voulez-vous vraiment supprimer cette carte ?')) return;
+
+  try {
+    const response = await fetch(`/api/cards/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!response.ok) throw new Error('Erreur lors de la suppression');
+    window.location.reload();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+document.getElementById('filterForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const params = new URLSearchParams();
+  
+  for (const [key, value] of formData.entries()) {
+    if (value) params.append(key, value);
+  }
+  
+  window.location.href = `/cards?${params.toString()}`;
+});
+</script>

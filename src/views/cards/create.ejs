@@ -1,0 +1,203 @@
+<%- contentFor('head') %>
+<title><%= 'Nouvelle carte' %></title>
+
+<%- contentFor('body') %>
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+  <h2 class="text-2xl font-bold mb-6"><%= 'Ajouter une nouvelle carte' %></h2>
+
+  <form method="POST" action="/api/cards" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
+        <input type="text" id="name" name="name" required value="<%= card ? card.name : '' %>"
+          class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+      </div>
+
+      <div>
+        <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+        <select id="type" name="type" required class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+          <option value="">Sélectionner un type</option>
+          <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic', 'Colorless'].forEach(type => { %>
+            <option value="<%= type %>" <%= card && card.type === type ? 'selected' : '' %>><%= type %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label for="rarity" class="block text-sm font-medium text-gray-700">Rareté</label>
+        <select id="rarity" name="rarity" required class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+          <option value="">Sélectionner une rareté</option>
+          <% ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Secret Rare'].forEach(rarity => { %>
+            <option value="<%= rarity %>" <%= card && card.rarity === rarity ? 'selected' : '' %>><%= rarity %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label for="hp" class="block text-sm font-medium text-gray-700">Points de vie</label>
+        <input type="number" id="hp" name="hp" required min="0" max="300" value="<%= card ? card.hp : '' %>"
+          class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+      </div>
+
+      <div>
+        <label for="imageUrl" class="block text-sm font-medium text-gray-700">URL de l'image</label>
+        <input type="url" id="imageUrl" name="imageUrl" required value="<%= card ? card.imageUrl : '' %>"
+          placeholder="https://example.com/image.jpg"
+          class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+      </div>
+
+      <div>
+        <label for="retreatCost" class="block text-sm font-medium text-gray-700">Coût de retraite</label>
+        <input type="number" id="retreatCost" name="retreatCost" required min="0" max="4" 
+          value="<%= card ? card.retreatCost : 0 %>"
+          class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+      </div>
+
+      <div>
+        <label for="weakness_type" class="block text-sm font-medium text-gray-700">Type de faiblesse</label>
+        <select id="weakness_type" name="weakness[type]" class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+          <option value="">Aucune faiblesse</option>
+          <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic'].forEach(type => { %>
+            <option value="<%= type %>" <%= card?.weakness?.type === type ? 'selected' : '' %>><%= type %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label for="resistance_type" class="block text-sm font-medium text-gray-700">Type de résistance</label>
+        <select id="resistance_type" name="resistance[type]" class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+          <option value="">Aucune résistance</option>
+          <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic'].forEach(type => { %>
+            <option value="<%= type %>" <%= card?.resistance?.type === type ? 'selected' : '' %>><%= type %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+
+    <div id="attacks" class="space-y-4">
+      <div class="flex justify-between items-center">
+        <label class="block text-sm font-medium text-gray-700">Attaques</label>
+        <button type="button" onclick="addAttack()" class="text-blue-600 hover:text-blue-500">
+          + Ajouter une attaque
+        </button>
+      </div>
+
+      <% const attacks = [{}] %>
+      <% attacks.forEach((attack, index) => { %>
+        <div class="attack-group border rounded p-4">
+          <div class="flex justify-between mb-2">
+            <h4 class="font-medium">Attaque <%= index + 1 %></h4>
+            <% if (index > 0) { %>
+              <button type="button" onclick="removeAttack(this)" class="text-red-600 hover:text-red-500">Supprimer</button>
+            <% } %>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-gray-700">Nom de l'attaque</label>
+              <input type="text" name="attacks[<%= index %>][name]" value="<%= attack.name || '' %>" required
+                class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-700">Dégâts</label>
+              <input type="number" name="attacks[<%= index %>][damage]" value="<%= attack.damage || '' %>" required
+                class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm text-gray-700">Description</label>
+            <textarea name="attacks[<%= index %>][description]" rows="2"
+              class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500"><%= attack.description || '' %></textarea>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm text-gray-700 mb-2">Coût en énergie</label>
+            <div class="flex flex-wrap gap-2">
+              <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic', 'Colorless'].forEach(energyType => { %>
+                <label class="flex items-center space-x-2">
+                  <input type="checkbox" name="attacks[<%= index %>][cost][]" value="<%= energyType %>"
+                    <%= attack.cost?.includes(energyType) ? 'checked' : '' %>
+                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span><%= energyType %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="flex justify-end space-x-4 mt-6">
+      <a href="/cards" class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">
+        Annuler
+      </a>
+      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <%= card ? 'Mettre à jour' : 'Créer' %>
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- contentFor('scripts') %>
+<script>
+window.attackCount = document.querySelectorAll('.attack-group').length;
+
+window.addAttack = function() {
+  const attacksDiv = document.getElementById('attacks');
+  const newIndex = attackCount++;
+  
+  const attackHtml = `
+    <div class="attack-group border rounded p-4">
+      <div class="flex justify-between mb-2">
+        <h4 class="font-medium">Attaque ${newIndex + 1}</h4>
+        <button type="button" onclick="removeAttack(this)" class="text-red-600 hover:text-red-500">Supprimer</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-gray-700">Nom de l'attaque</label>
+          <input type="text" name="attacks[${newIndex}][name]" required
+            class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-sm text-gray-700">Dégâts</label>
+          <input type="number" name="attacks[${newIndex}][damage]" required
+            class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <label class="block text-sm text-gray-700">Description</label>
+        <textarea name="attacks[${newIndex}][description]" rows="2"
+          class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500"></textarea>
+      </div>
+
+      <div class="mt-4">
+        <label class="block text-sm text-gray-700 mb-2">Coût en énergie</label>
+        <div class="flex flex-wrap gap-2">
+          ${['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic', 'Colorless'].map(energyType => `
+            <label class="flex items-center space-x-2">
+              <input type="checkbox" name="attacks[${newIndex}][cost][]" value="${energyType}"
+                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              <span>${energyType}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  attacksDiv.insertAdjacentHTML('beforeend', attackHtml);
+};
+
+window.removeAttack = function(button) {
+  button.closest('.attack-group').remove();
+  // Mettre à jour les index des attaques restantes
+  document.querySelectorAll('.attack-group').forEach((group, index) => {
+    group.querySelector('h4').textContent = `Attaque ${index + 1}`;
+    group.querySelectorAll('input, textarea').forEach(input => {
+      input.name = input.name.replace(/attacks\[\d+\]/, `attacks[${index}]`);
+    });
+  });
+  attackCount--;
+};
+</script>
