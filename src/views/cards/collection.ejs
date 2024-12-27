@@ -1,0 +1,114 @@
+<%- contentFor('head') %>
+<title>Ma Collection</title>
+
+<%- contentFor('body') %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- En-tête avec statistiques -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-6">Ma Collection</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Total des cartes -->
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-gray-600 text-sm">Total des cartes</div>
+        <div class="text-2xl font-bold"><%= stats.totalCards %></div>
+      </div>
+      
+      <!-- Cartes uniques -->
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-gray-600 text-sm">Cartes uniques</div>
+        <div class="text-2xl font-bold"><%= stats.uniqueCards %></div>
+      </div>
+      
+      <!-- Distribution par rareté -->
+      <div class="bg-white rounded-lg shadow p-4 lg:col-span-2">
+        <div class="text-gray-600 text-sm mb-2">Distribution par rareté</div>
+        <div class="flex flex-wrap gap-2">
+          <% let colors = {
+            'Secret Rare': 'bg-purple-100 text-purple-800',
+            'Ultra Rare': 'bg-yellow-100 text-yellow-800',
+            'Rare': 'bg-blue-100 text-blue-800',
+            'Uncommon': 'bg-green-100 text-green-800',
+            'Common': 'bg-gray-100 text-gray-800'
+          } %>
+          <% for (const [rarity, count] of Object.entries(stats.byRarity)) { %>
+            <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= colors[rarity] %>">
+              <%= rarity %>: <%= count %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des cartes -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <% collection.forEach(card => { %>
+      <div class="relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <!-- Badge de quantité -->
+        <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold rounded-full px-2 py-0.5">
+          ×<%= card.count %>
+        </span>
+
+        <!-- Image -->
+        <div class="relative aspect-[3/4]">
+          <img src="<%= card.imageUrl %>" alt="<%= card.name %>" class="absolute inset-0 w-full h-full object-cover">
+        </div>
+
+        <!-- Informations -->
+        <div class="p-4">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-bold"><%= card.name %></h3>
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+              <%= card.type === 'Fire' ? 'bg-red-100 text-red-800' :
+                  card.type === 'Water' ? 'bg-blue-100 text-blue-800' :
+                  card.type === 'Grass' ? 'bg-green-100 text-green-800' :
+                  card.type === 'Lightning' ? 'bg-yellow-100 text-yellow-800' :
+                  card.type === 'Fighting' ? 'bg-red-100 text-red-800' :
+                  card.type === 'Psychic' ? 'bg-purple-100 text-purple-800' :
+                  'bg-gray-100 text-gray-800' %>">
+              <%= card.type %>
+            </span>
+          </div>
+
+          <div class="space-y-1 text-sm text-gray-600">
+            <p>HP: <%= card.hp %></p>
+            <p>Rareté: 
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                <%= colors[card.rarity] %>">
+                <%= card.rarity %>
+              </span>
+            </p>
+          </div>
+
+          <!-- Bouton voir détails -->
+          <div class="mt-4 flex justify-end">
+            <a href="/cards/<%= card._id %>"
+               class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-150">
+              Voir détails
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Message si collection vide -->
+  <% if (collection.length === 0) { %>
+    <div class="text-center py-12">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+      </svg>
+      <h3 class="mt-2 text-lg font-medium text-gray-900">Collection vide</h3>
+      <p class="mt-1 text-sm text-gray-500">Commencez à ouvrir des boosters pour obtenir des cartes !</p>
+      <div class="mt-6">
+        <a href="/boosters" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+          Ouvrir un booster
+        </a>
+      </div>
+    </div>
+  <% } %>
+</div>

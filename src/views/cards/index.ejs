@@ -2,12 +2,19 @@
 <title>Liste des cartes</title>
 
 <%- contentFor('body') %>
-<div class="container mx-auto px-4">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Collection de cartes</h1>
-    <% if (locals.user?.role === 'admin') { %>
-      <a href="/cards/new" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ajouter une carte</a>
-    <% } %>
+    <h1 class="text-3xl font-bold">Cartes Pokémon</h1>
+    <div class="flex space-x-4">
+      <a href="/cards/collection" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Ma Collection
+      </a>
+      <% if (locals.user?.role === 'admin') { %>
+        <a href="/cards/new" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Ajouter une carte
+        </a>
+      <% } %>
+    </div>
   </div>
 
   <!-- Filtres -->
@@ -15,7 +22,7 @@
     <form id="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div>
         <label class="block text-sm font-medium text-gray-700">Type</label>
-        <select name="type" class="mt-1 block w-full rounded-md border-gray-300">
+        <select name="type" class="mt-1 block w-full rounded border-gray-300">
           <option value="">Tous</option>
           <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic', 'Colorless'].forEach(type => { %>
             <option value="<%= type %>" <%= locals.filters?.type === type ? 'selected' : '' %>><%= type %></option>
@@ -24,7 +31,7 @@
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700">Rareté</label>
-        <select name="rarity" class="mt-1 block w-full rounded-md border-gray-300">
+        <select name="rarity" class="mt-1 block w-full rounded border-gray-300">
           <option value="">Toutes</option>
           <% ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Secret Rare'].forEach(rarity => { %>
             <option value="<%= rarity %>" <%= locals.filters?.rarity === rarity ? 'selected' : '' %>><%= rarity %></option>
@@ -35,48 +42,41 @@
         <label class="block text-sm font-medium text-gray-700">Recherche</label>
         <input type="text" name="name" value="<%= locals.filters?.name || '' %>" 
           placeholder="Nom de la carte" 
-          class="mt-1 block w-full rounded-md border-gray-300">
+          class="mt-1 block w-full rounded border-gray-300">
       </div>
       <div class="flex items-end">
         <button type="submit" 
-          class="w-full bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200">
+          class="w-full bg-gray-50 text-gray-800 px-4 py-2 rounded hover:bg-gray-100">
           Filtrer
         </button>
       </div>
     </form>
   </div>
 
-  <!-- Grille de cartes -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    <% if (locals.cards) { %>
-      <% cards.forEach(card => { %>
-        <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+  <!-- Liste des cartes -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <% cards.forEach(card => { %>
+      <div class="bg-white rounded-lg shadow overflow-hidden group hover:shadow-lg transition-all">
+        <div class="relative">
           <img src="<%= card.imageUrl %>" alt="<%= card.name %>" 
-            class="w-full h-48 object-cover">
-          <div class="p-4">
-            <div class="flex justify-between items-start mb-2">
-              <h3 class="text-lg font-semibold"><%= card.name %></h3>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                <%= card.type %>
-              </span>
-            </div>
-            <div class="text-sm text-gray-600 mb-4">
-              <p>HP: <%= card.hp %></p>
-              <p>Rareté: <%= card.rarity %></p>
-            </div>
-            <div class="flex justify-between items-center">
+            class="w-full aspect-[3/4] object-cover">
+          
+          <!-- Overlay au survol -->
+          <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 
+                      transition-opacity flex items-center justify-center">
+            <div class="space-y-2 text-center">
               <a href="/cards/<%= card._id %>" 
-                class="text-blue-600 hover:text-blue-800">
+                 class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Voir détails
               </a>
               <% if (locals.user?.role === 'admin') { %>
-                <div class="flex space-x-2">
+                <div class="flex justify-center space-x-2 mt-2">
                   <a href="/cards/<%= card._id %>/edit" 
-                    class="text-gray-600 hover:text-gray-800">
+                     class="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
                     Modifier
                   </a>
                   <button onclick="deleteCard('<%= card._id %>')" 
-                    class="text-red-600 hover:text-red-800">
+                          class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
                     Supprimer
                   </button>
                 </div>
@@ -84,16 +84,36 @@
             </div>
           </div>
         </div>
-      <% }) %>
-    <% } %>
+
+        <div class="p-4">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-bold truncate"><%= card.name %></h3>
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+              <%= card.type === 'Fire' ? 'bg-red-100 text-red-800' : 
+                  card.type === 'Water' ? 'bg-blue-100 text-blue-800' :
+                  card.type === 'Grass' ? 'bg-green-100 text-green-800' :
+                  card.type === 'Lightning' ? 'bg-yellow-100 text-yellow-800' :
+                  card.type === 'Fighting' ? 'bg-red-100 text-red-800' :
+                  card.type === 'Psychic' ? 'bg-purple-100 text-purple-800' : 
+                  'bg-gray-100 text-gray-800' %>">
+              <%= card.type %>
+            </span>
+          </div>
+          <div class="text-sm text-gray-600">
+            <p>HP: <%= card.hp %></p>
+            <p>Rareté: <%= card.rarity %></p>
+          </div>
+        </div>
+      </div>
+    <% }) %>
   </div>
 
   <!-- Pagination -->
-  <% if (locals.pagination && pagination.pages > 1) { %>
-    <div class="flex justify-center space-x-2 mt-6">
+  <% if (pagination.pages > 1) { %>
+    <div class="flex justify-center mt-8 space-x-2">
       <% for(let i = 1; i <= pagination.pages; i++) { %>
-        <a href="?page=<%= i %>" 
-          class="px-3 py-2 rounded <%= pagination.page === i ? 'bg-blue-600 text-white' : 'bg-gray-100' %>">
+        <a href="?page=<%= i %><%= filters ? '&' + new URLSearchParams(filters).toString() : '' %>" 
+          class="px-3 py-2 rounded <%= pagination.page === i ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200' %>">
           <%= i %>
         </a>
       <% } %>
@@ -107,17 +127,16 @@ async function deleteCard(id) {
   if (!confirm('Voulez-vous vraiment supprimer cette carte ?')) return;
 
   try {
-    const response = await fetch(`/api/cards/${id}`, {
+    const response = await fetch(`/cards/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+      credentials: 'include'
     });
 
     if (!response.ok) throw new Error('Erreur lors de la suppression');
     window.location.reload();
   } catch (error) {
-    alert(error.message);
+    console.error('Erreur:', error);
+    alert('Une erreur est survenue lors de la suppression de la carte');
   }
 }
 

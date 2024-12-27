@@ -1,45 +1,56 @@
 <%- contentFor('head') %>
-<title>Open a Booster Pack</title>
+<title>Ouvrir un booster</title>
 
 <%- contentFor('body') %>
-<h1 class="text-3xl font-bold mb-4">Open a Booster Pack</h1>
-  <p class="text-lg">Welcome, <%= user.username %>!</p>
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <h1 class="text-3xl font-bold mb-6">Booster Pokemon</h1>
 
-  <!-- Display probabilities -->
-  <h2 class="text-2xl font-semibold mt-4">Booster Probabilities</h2>
-  <table class="w-full mt-2">
-    <thead>
-      <tr class="text-left">
-        <th class="px-4 py-2">Rarity</th>
-        <th class="px-4 py-2">Probability</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if (probabilities) { %>
-        <% for (let rarity in probabilities) { %>
-          <tr class="border-t">
-            <td class="px-4 py-2"><%= rarity %></td>
-            <td class="px-4 py-2"><%= probabilities[rarity] %></td>
-          </tr>
-        <% } %>
-      <% } else { %>
-        <tr>
-          <td colspan="2" class="px-4 py-2">No probabilities available.</td>
-        </tr>
-      <% } %>
-    </tbody>
-  </table>
+    <!-- Informations sur les probabilités -->
+    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-semibold mb-3">Probabilités par paquet</h2>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <% Object.entries(probabilities).forEach(([rarity, probability]) => { %>
+        <div class="text-center p-2 rounded bg-white shadow">
+          <div class="font-medium mb-1"><%= rarity %></div>
+          <div class="text-sm text-gray-600"><%= probability %></div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
 
-  <!-- Form to open a booster pack -->
-  <h2 class="text-2xl font-semibold mt-4">Open a Booster Pack</h2>
-  <form action="/boosters/api/open" method="POST" class="mt-2">
-    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Open Booster</button>
-  </form>
-
-  <!-- Navigation links -->
-  <p class="mt-4">
-    <a href="/" class="text-blue-600 hover:underline">Back to Home</a>
-    |
-    <a href="/boosters/results" class="text-blue-600 hover:underline">View Results</a>
-  </p>
-<%- contentFor('scripts') %>
+    <!-- Booster -->
+    <div class="text-center">
+      <form action="/boosters/api/open" method="POST">
+        <div
+          class="relative w-64 h-96 mx-auto mb-4 transform hover:scale-105 transition-transform cursor-pointer"
+        >
+          <img
+            src="/img/booster-pack.jpg"
+            alt="Booster Pack"
+            class="w-full h-full object-cover rounded-lg shadow-lg"
+          />
+          <div
+            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg"
+          >
+            <span class="text-white text-2xl font-bold"
+              >Cliquez pour ouvrir</span
+            >
+          </div>
+          <button
+            type="submit"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          >
+            Ouvrir le booster
+          </button>
+        </div>
+        <button
+          type="submit"
+          class="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transform transition hover:scale-105"
+        >
+          Ouvrir le booster
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

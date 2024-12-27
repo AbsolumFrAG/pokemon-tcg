@@ -5,11 +5,11 @@
 <div class="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
   <h2 class="text-2xl font-bold mb-6"><%= 'Ajouter une nouvelle carte' %></h2>
 
-  <form method="POST" action="/api/cards" class="space-y-6">
+  <form method="POST" action="/cards" class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
-        <input type="text" id="name" name="name" required value="<%= card ? card.name : '' %>"
+        <input type="text" id="name" name="name" required value="<%= '' %>"
           class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
       </div>
 
@@ -18,7 +18,7 @@
         <select id="type" name="type" required class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
           <option value="">Sélectionner un type</option>
           <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic', 'Colorless'].forEach(type => { %>
-            <option value="<%= type %>" <%= card && card.type === type ? 'selected' : '' %>><%= type %></option>
+            <option value="<%= type %>" <%= '' %>><%= type %></option>
           <% }) %>
         </select>
       </div>
@@ -28,20 +28,20 @@
         <select id="rarity" name="rarity" required class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
           <option value="">Sélectionner une rareté</option>
           <% ['Common', 'Uncommon', 'Rare', 'Ultra Rare', 'Secret Rare'].forEach(rarity => { %>
-            <option value="<%= rarity %>" <%= card && card.rarity === rarity ? 'selected' : '' %>><%= rarity %></option>
+            <option value="<%= rarity %>" <%= '' %>><%= rarity %></option>
           <% }) %>
         </select>
       </div>
 
       <div>
         <label for="hp" class="block text-sm font-medium text-gray-700">Points de vie</label>
-        <input type="number" id="hp" name="hp" required min="0" max="300" value="<%= card ? card.hp : '' %>"
+        <input type="number" id="hp" name="hp" required min="0" max="300" value="<%= '' %>"
           class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
       </div>
 
       <div>
         <label for="imageUrl" class="block text-sm font-medium text-gray-700">URL de l'image</label>
-        <input type="url" id="imageUrl" name="imageUrl" required value="<%= card ? card.imageUrl : '' %>"
+        <input type="url" id="imageUrl" name="imageUrl" required value="<%= '' %>"
           placeholder="https://example.com/image.jpg"
           class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
       </div>
@@ -49,7 +49,7 @@
       <div>
         <label for="retreatCost" class="block text-sm font-medium text-gray-700">Coût de retraite</label>
         <input type="number" id="retreatCost" name="retreatCost" required min="0" max="4" 
-          value="<%= card ? card.retreatCost : 0 %>"
+          value="<%= 0 %>"
           class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
       </div>
 
@@ -58,7 +58,7 @@
         <select id="weakness_type" name="weakness[type]" class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
           <option value="">Aucune faiblesse</option>
           <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic'].forEach(type => { %>
-            <option value="<%= type %>" <%= card?.weakness?.type === type ? 'selected' : '' %>><%= type %></option>
+            <option value="<%= type %>" <%= '' %>><%= type %></option>
           <% }) %>
         </select>
       </div>
@@ -68,7 +68,7 @@
         <select id="resistance_type" name="resistance[type]" class="mt-1 block w-full rounded border-gray-300 focus:border-blue-500">
           <option value="">Aucune résistance</option>
           <% ['Grass', 'Fire', 'Water', 'Lightning', 'Fighting', 'Psychic'].forEach(type => { %>
-            <option value="<%= type %>" <%= card?.resistance?.type === type ? 'selected' : '' %>><%= type %></option>
+            <option value="<%= type %>" <%= '' %>><%= type %></option>
           <% }) %>
         </select>
       </div>
@@ -132,7 +132,7 @@
         Annuler
       </a>
       <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-        <%= card ? 'Mettre à jour' : 'Créer' %>
+        <%= 'Créer' %>
       </button>
     </div>
   </form>

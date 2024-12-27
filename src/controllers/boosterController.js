@@ -3,9 +3,19 @@ const boosterService = require("../services/boosterService");
 const boosterController = {
   async openBooster(req, res, next) {
     try {
+      console.log("Tentative d'ouverture de booster...");
       const cards = await boosterService.openBooster(req.user.id);
-      res.json({ success: true, cards });
+      console.log("Cartes obtenues:", cards);
+
+      // Si c'est une requête AJAX, renvoyer du JSON
+      if (req.xhr || req.headers.accept.includes("application/json")) {
+        res.json({ success: true, cards });
+      } else {
+        // Sinon, faire le rendu de la page
+        res.render("boosters/results", { cards });
+      }
     } catch (error) {
+      console.error("Erreur lors de l'ouverture du booster:", error);
       next(error);
     }
   },

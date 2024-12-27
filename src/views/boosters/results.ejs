@@ -1,0 +1,119 @@
+<%- contentFor('head') %>
+<title>Découverte des cartes</title>
+
+<%- contentFor('body') %>
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+    id="cardsContainer"
+  >
+    <% cards.forEach((card, index) => { %>
+    <div class="card-wrapper delay-<%= index %>">
+      <!-- Carte -->
+      <div
+        class="bg-white rounded-lg shadow-xl transform transition-all duration-500 hover:scale-105"
+      >
+        <div class="relative pb-[140%]">
+          <div class="absolute inset-0">
+            <img
+              src="<%= card.imageUrl %>"
+              alt="<%= card.name %>"
+              class="w-full h-full object-cover rounded-t-lg"
+            />
+
+            <!-- Badge de rareté -->
+            <div class="absolute top-2 right-2">
+              <span
+                class="px-2 py-1 rounded-full text-xs font-bold <%= card.rarity === 'Ultra Rare' ? 'bg-yellow-300 text-yellow-800' : card.rarity === 'Rare' ? 'bg-blue-300 text-blue-800' : card.rarity === 'Uncommon' ? 'bg-green-300 text-green-800' : 'bg-gray-300 text-gray-800' %>"
+              >
+                <%= card.rarity %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-white rounded-b-lg">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-bold"><%= card.name %></h3>
+            <span
+              class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= card.type === 'Fire' ? 'bg-red-200 text-red-800' : card.type === 'Water' ? 'bg-blue-200 text-blue-800' : card.type === 'Grass' ? 'bg-green-200 text-green-800' : card.type === 'Lightning' ? 'bg-yellow-200 text-yellow-800' : card.type === 'Fighting' ? 'bg-red-200 text-red-800' : card.type === 'Psychic' ? 'bg-purple-200 text-purple-800' : 'bg-gray-200 text-gray-800' %>"
+            >
+              <%= card.type %>
+            </span>
+          </div>
+          <div class="text-sm text-gray-600">
+            <p>HP: <%= card.hp %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+
+  <div class="text-center mt-12">
+    <a
+      href="/boosters"
+      class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+    >
+      <span>Ouvrir un nouveau booster</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 ml-2"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  .card-wrapper {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease forwards;
+  }
+
+  .delay-0 {
+    animation-delay: 0s;
+  }
+  .delay-1 {
+    animation-delay: 0.5s;
+  }
+  .delay-2 {
+    animation-delay: 1s;
+  }
+  .delay-3 {
+    animation-delay: 1.5s;
+  }
+  .delay-4 {
+    animation-delay: 2s;
+  }
+  .delay-5 {
+    animation-delay: 2.5s;
+  }
+  .delay-6 {
+    animation-delay: 3s;
+  }
+  .delay-7 {
+    animation-delay: 3.5s;
+  }
+  .delay-8 {
+    animation-delay: 4s;
+  }
+  .delay-9 {
+    animation-delay: 4.5s;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
