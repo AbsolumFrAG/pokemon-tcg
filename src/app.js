@@ -51,6 +51,8 @@ app.get("/", (req, res) => res.redirect("/cards"));
 app.use("/auth", authRoutes);
 app.use("/cards", cardRoutes);
 app.use("/boosters", boosterRoutes);
+app.use(express.static("img"));
+app.use("/img", express.static("src/img"));
 
 // Gestion des erreurs 404
 app.use((req, res, next) => {
