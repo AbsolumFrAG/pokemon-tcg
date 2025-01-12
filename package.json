@@ -4,7 +4,7 @@
   "main": "src/app.js",
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "jest",
+    "test": "jest, mocha",
     "seed": "node seeder.js"
   },
   "keywords": [],
@@ -23,7 +23,9 @@
     "mongoose": "^8.9.2"
   },
   "devDependencies": {
+    "chai": "^5.1.2",
     "jest": "^29.7.0",
+    "mocha": "^11.0.1",
     "nodemon": "^3.1.9",
     "supertest": "^7.0.0"
   }
